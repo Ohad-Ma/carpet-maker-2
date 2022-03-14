@@ -48,12 +48,12 @@
  */
 namespace ariel {
    std::string mat(int COLS, int ROWS, char symb_a, char symb_b) {
-      int found = findSymb(symb_a); // Finds bad char '\r', '\n' etc.. 
-      int found2 = findSymb(symb_b); // Finds bad char '\r', '\n' etc.. 
+      int found = findSymb(symb_a); // Finds magic numbers 
+      int found2 = findSymb(symb_b); // Finds magic numbers 
       std::string carpet; // The returned string
 
       // Base cases :
-      if ((found == 1 || found2 == 1) || (found == 1 && found2 == 1)) { // symb_a/symb_b contains forbidden chars / magic numbers (the ascii ones below 33 and above 126)
+      if ((found == 1 || found2 == 1) || (found == 1 && found2 == 1)) { // symb_a/symb_b contains magic numbers (the ascii chars below 33 and above 126)
          throw std::invalid_argument("invalid special character");
       }
       if ((ROWS < 1 || COLS < 1) || (ROWS < 1 && COLS < 1)) { // ROWS/COLS are 0 or negative 
@@ -120,21 +120,8 @@ namespace ariel {
     */
    int findSymb(char c) {
       // both ch_1, ch_2 has no usage besides this function so no need to put it outside
-      const char ch_1 = 127; 
+      const char ch_1 = 126; 
       const char ch_2 = 33;
-      std::vector < char > forbidden_chars = {
-         '\n',
-         '\r',
-         '\t',
-         '\0',
-         ' '
-      };
-      std::vector < char > ::iterator it; // for searching in 
-      it = std::find(forbidden_chars.begin(), forbidden_chars.end(), c);
-      if (c >= ch_1 || c < ch_2) { // magic numbers found
-         return 1;
-      }
-
-      return it != forbidden_chars.end() ? 1 : 0; // if any of the forbidden chars are found returns 1 else 0
+      return (c > ch_1 || c < ch_2) ? 1 : 0;
    }
 }
