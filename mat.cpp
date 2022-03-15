@@ -63,7 +63,7 @@ namespace ariel {
          throw std::invalid_argument("ROLS & COLS has to be odd numbers");
       }
 
-      // Init 3 matrices (vector type integer) 
+      // Init 3 matrices (integer type vector) - more comfortable instead of using array
       std::vector < std::vector <int>> mat_a(ROWS, std::vector <int> (COLS, 0)); 
       std::vector < std::vector <int>> mat_b(ROWS, std::vector <int> (COLS, 0));
       std::vector < std::vector <int>> minimal_mat(ROWS, std::vector <int> (COLS, 0)); // Minimum cell values of both matrices above
@@ -71,7 +71,7 @@ namespace ariel {
       // Similar to knapsack 1-0 problem we take the minimum of the cell behind, above and vertical and add 1 
       for (int i = 1; i < ROWS; ++i) {
          for (int j = 1; j < COLS; ++j) {
-            mat_a[i][j] = std::min(std::min(mat_a[i - 1][j - 1], mat_a[i][j - 1]), mat_a[i - 1][j]) + 1;
+            mat_a.at(i).at(j) = std::min(std::min(mat_a.at(i - 1).at(j - 1), mat_a.at(i).at(j - 1)), mat_a.at(i - 1).at(j)) + 1;
          }
       }
 
@@ -87,23 +87,23 @@ namespace ariel {
       // Every cell i,j in minimal_mat would be the minimal cell i,j in mat_a,mat_b (both matrices above)   
       for (int i = 0; i < ROWS; ++i) {
          for (int j = 0; j < COLS; ++j) {
-            minimal_mat[i][j] = std::min(mat_a[i][j], mat_b[i][j]);
+            minimal_mat.at(i).at(j) = std::min(mat_a.at(i).at(j), mat_b.at(i).at(j));
          }
       }
      
       // %2 every cell in the minimal_mat so it's easy to know where to place first symbol and second symbol 
       for (int i = 0; i < ROWS; ++i) {
          for (int j = 0; j < COLS; ++j) {
-            minimal_mat[i][j] %= 2;
+            minimal_mat.at(i).at(j) %= 2;
          }
       }
       // If at i,j in the minimal_mat 0 is found concatenate first char (or symbol_a) to carpet or second char to carpet if 1 is found 
       for (int i = 0; i < ROWS; ++i) {
          for (int j = 0; j < COLS; ++j) {
-            minimal_mat[i][j] == 0 ? carpet += symb_a : carpet += symb_b;
+            minimal_mat.at(i).at(j) == 0 ? carpet.push_back(symb_a) : carpet.push_back(symb_b);
 
          }
-         carpet += '\n'; // To look like a matrix
+         carpet.push_back('\n'); // To look like a matrix
       }
         // Clearing leftover memory
         mat_a.clear();
